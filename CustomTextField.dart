@@ -98,12 +98,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           contentPadding: EdgeInsetsDirectional.fromSTEB(16, 24, 16, 12),
           border: InputBorder.none,
         ),
-        style: FlutterFlowTheme.of(context).bodyMedium.override(
-              fontFamily: 'Outfit',
-              letterSpacing: 0,
-            ),
-        TextStyle(
+        style: TextStyle(
           backgroundColor: widget.highlightUserInput ? Colors.yellow : null,
+          fontFamily: 'Outfit',
+          letterSpacing: 0,
         ),
         cursorColor: FlutterFlowTheme.of(context).primary,
       ),
