@@ -14,93 +14,99 @@ class CustomTextField extends StatefulWidget {
     super.key,
     this.width,
     this.height,
-    required this.autofocus,
-    required this.obscureText,
     this.maxLines,
     this.minLines,
-    this.cursorColor,
-    required this.highlightUesrInput,
-    this.controller,
-    this.textStyle,
-    this.highlightStyle,
+    required this.highlightUserInput,
+    this.initialText,
   });
 
   final double? width;
   final double? height;
-  final bool autofocus;
-  final bool obscureText;
   final int? maxLines;
   final int? minLines;
-  final Color? cursorColor;
-  final bool highlightUesrInput;
+  final bool highlightUserInput;
+  final String? initialText;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  late TextEditingController _controller;
+
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_updateText);
+    _controller = TextEditingController(text: widget.initialText);
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_updateText);
+    _controller.dispose();
     super.dispose();
-  }
-
-  void _updateText() {
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final text = widget.controller.text;
-    List<TextSpan> spans = [];
-    int startIndex = 0;
-
-    while (startIndex < text.length) {
-      int asteriskStart = text.indexOf('*', startIndex);
-      if (asteriskStart == -1) {
-        spans.add(TextSpan(
-            text: text.substring(startIndex), style: widget.textStyle));
-        break;
-      }
-      int asteriskEnd = text.indexOf('*', asteriskStart + 1);
-      if (asteriskEnd == -1) {
-        spans.add(TextSpan(
-            text: text.substring(startIndex), style: widget.textStyle));
-        break;
-      }
-
-      if (asteriskStart > startIndex) {
-        spans.add(TextSpan(
-            text: text.substring(startIndex, asteriskStart),
-            style: widget.textStyle));
-      }
-      spans.add(TextSpan(
-          text: text.substring(asteriskStart, asteriskEnd + 1),
-          style: widget.highlightStyle));
-      startIndex = asteriskEnd + 1;
-    }
-
-    return TextFormField(
-      controller: widget.controller,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(),
-        hintText: 'Enter text with *asterisks* to highlight',
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      padding: const EdgeInsets.all(16.0),
+      child: TextField(
+        controller: _controller,
+        maxLines: widget.maxLines,
+        minLines: widget.minLines,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                fontFamily: 'Poppins',
+                letterSpacing: 0,
+              ),
+          alignLabelWithHint: true,
+          hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                fontFamily: 'Poppins',
+                letterSpacing: 0,
+              ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Color(0x00000000),
+              width: 0,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Color(0x00000000),
+              width: 0,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: FlutterFlowTheme.of(context).error,
+              width: 0,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: FlutterFlowTheme.of(context).error,
+              width: 0,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          contentPadding: EdgeInsetsDirectional.fromSTEB(16, 24, 16, 12),
+          border: InputBorder.none,
+        ),
+        style: FlutterFlowTheme.of(context).bodyMedium.override(
+              fontFamily: 'Outfit',
+              letterSpacing: 0,
+            ),
+        cursorColor: FlutterFlowTheme.of(context).primary,
+        style: TextStyle(
+          backgroundColor: widget.highlightUserInput ? Colors.yellow : null,
+        ),
       ),
-      style: widget.textStyle,
-      maxLines: null,
-      minLines: 1,
-      buildCounter: (BuildContext context,
-          {int currentLength, bool isFocused, int maxLength}) {
-        return RichText(
-          text: TextSpan(children: spans),
-        );
-      },
     );
   }
 }
