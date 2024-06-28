@@ -102,10 +102,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
               fontFamily: 'Outfit',
               letterSpacing: 0,
             ),
-        cursorColor: FlutterFlowTheme.of(context).primary,
-        style: TextStyle(
+        TextStyle(
           backgroundColor: widget.highlightUserInput ? Colors.yellow : null,
         ),
+        cursorColor: FlutterFlowTheme.of(context).primary,
       ),
     );
   }
